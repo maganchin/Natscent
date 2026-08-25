@@ -1,0 +1,484 @@
+/* ---------------------------------------------------------------
+   Base: reset, typography, header, buttons, footer.
+   No gradients, no blur, no rounded corners, no hover motion.
+   --------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--ink);
+
+  /* -------------------------------------------- site smoke -- */
+  /* The plume image spans the whole document in normal flow (not a
+     fixed/positioned layer — background-attachment: fixed hits a
+     known Chrome compositor-tiling bug on tall pages, where content
+     below the first raster tile stops repainting). The page's own
+     aspect ratio is close to the image's, so "cover" maps the full
+     plume across the full page almost 1:1: scroll position already
+     corresponds to a position in the image, no JS panning needed.
+     A scrim wash on top keeps body text at its normal contrast, and
+     recolors ivory → charcoal in step with the dark-zone shift used
+     elsewhere on the page. */
+  --smoke-scrim: rgba(245, 243, 238, 0.82);
+  background-color: var(--ivory);
+  background-image: linear-gradient(var(--smoke-scrim), var(--smoke-scrim)), url("/smoke-plume.webp");
+  background-repeat: no-repeat, no-repeat;
+  background-position: center top, center top;
+  background-size: 100% 100%, cover;
+}
+
+body.is-dark-zone {
+  --smoke-scrim: rgba(33, 28, 42, 0.88);
+}
+
+/* Motion-enabled upgrade: SmokeScrub (src/smoke.ts) injects these two
+   fixed layers and paints real scroll-scrubbed plume frames onto the
+   canvas, with the same --smoke-scrim wash on top. Absent JS or under
+   reduced motion, neither element exists and the static body
+   background-image above is what's visible. */
+#smoke-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+}
+
+#smoke-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background-color: var(--smoke-scrim);
+}
+
+/* Cursor ingredient-trail. Above the smoke/photo ground, below type
+   and the nav, so stamps never cover headlines or buttons. */
+/* Cursor ingredient-trail. Above the smoke/photo ground, below type
+   and the nav, so stamps never cover headlines or buttons. */
+.scent-stamp {
+  position: fixed;
+  z-index: 3;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.scent-stamp img {
+  width: 100%;
+  height: auto;
+  max-width: none;
+  display: block;
+}
+
+.scent-stamp--knockout {
+  mix-blend-mode: screen;
+}
+
+img,
+svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+h1,
+h2,
+h3,
+p,
+ul,
+ol {
+  margin: 0;
+}
+
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+  padding: 0;
+}
+
+a {
+  color: inherit;
+}
+
+::selection {
+  background: var(--copper);
+  color: var(--ivory);
+}
+
+:focus-visible {
+  outline: 2px solid var(--copper);
+  outline-offset: 3px;
+}
+
+body.is-dark-zone :focus-visible {
+  outline-color: var(--blush);
+}
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--pad-x);
+  z-index: 200;
+  padding: 0.6rem 1rem;
+  background: var(--charcoal);
+  color: var(--ink-on-dark);
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.skip-link:focus-visible {
+  top: 0.75rem;
+}
+
+/* -------------------------------------------------- typography -- */
+
+.display {
+  font-family: var(--font-serif);
+  font-weight: 340;
+  font-variation-settings: "opsz" 144;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  text-wrap: balance;
+  max-width: 16em;
+}
+
+.section--dark .display {
+  color: var(--ink-on-dark);
+}
+
+p {
+  max-width: 36em;
+  text-wrap: pretty;
+  color: var(--stone);
+}
+
+.section--dark p {
+  color: var(--stone-on-dark);
+}
+
+/* ------------------------------------------------------ header -- */
+
+/* Transparent and floating over the hero photo by default — no flat
+   color block cutting across the image, no seam. Once the hero has
+   scrolled past (see initHeaderState in scroll.ts), it turns solid so
+   it stays legible over lighter sections. That solid state uses the
+   hero photo's own warm dark tone (#0f100a) rather than --charcoal:
+   --charcoal carries the logo's plum tint, which reads as a mismatch
+   against the warm, earthy hero/footer photography. */
+/* A permanent, subtle veil behind the nav — not a solid bar, just
+   enough of a dark gradient that logo/links stay legible if a
+   section's own text ever scrolls up underneath the fixed header
+   (e.g. while still inside the hero, before .site-header--solid
+   below takes over). Barely visible against the hero photo itself;
+   only reads once something pale is behind it. */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  border-bottom: 1px solid transparent;
+  transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+
+/* The veil reaches well past the header's own box (nav height + 6rem)
+   and fades out over that whole distance, so there's no point where
+   the rate of change is fast enough to read as an edge — unlike a
+   gradient confined to the header's own short box, which had exactly
+   that problem. */
+.site-header::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: calc(100% + 6rem);
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(10, 9, 6, 0.78) 0%,
+    rgba(10, 9, 6, 0.6) 35%,
+    rgba(10, 9, 6, 0.3) 65%,
+    rgba(10, 9, 6, 0.08) 88%,
+    transparent 100%
+  );
+  transition: opacity var(--dur) var(--ease);
+}
+
+.site-header--solid {
+  background-color: var(--charcoal);
+  border-bottom-color: var(--rule-on-dark);
+}
+
+.site-header--solid::before {
+  opacity: 0;
+}
+
+/* margin-inline: 0 (not auto) — the logo stays pinned to the left
+   edge of the viewport on every window size, same reasoning as
+   .hero__inner in sections.css. */
+/* No max-width here (unlike .section__inner): the logo and the link
+   group should pin to the true left/right edges of the viewport on
+   every window size, not stop at --measure-wide and leave a gap on
+   wide screens. */
+.site-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1rem var(--pad-x);
+}
+
+.site-nav__links {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.4rem, 3vw, 2.4rem);
+}
+
+.site-nav__brand {
+  display: grid;
+  flex-shrink: 0;
+}
+
+.site-nav__logo {
+  grid-area: 1 / 1;
+  width: clamp(216px, 22vw, 276px);
+  height: auto;
+}
+
+@media (max-width: 40rem) {
+  .site-nav__logo {
+    width: clamp(118px, 32vw, 152px);
+  }
+}
+
+/* Always show the original full-color mark (logo.svg) — the
+   recolored single-tone variant (logo-light.svg) is kept in the
+   markup but unused so it's easy to bring back for a dark header
+   if contrast ever requires it. */
+.site-nav__logo--dark {
+  opacity: 1;
+}
+
+.site-nav__logo--light {
+  opacity: 0;
+}
+
+.site-nav__link {
+  font-family: var(--font-sans);
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink-on-dark);
+  transition: color var(--dur) var(--ease);
+}
+
+.site-nav__link:hover {
+  color: var(--blush);
+}
+
+@media (max-width: 40rem) {
+  .site-nav__link {
+    display: none;
+  }
+}
+
+.site-nav__cta {
+  font-family: var(--font-sans);
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  color: var(--ink-on-dark);
+  transition: color var(--dur) var(--ease);
+}
+
+.site-nav__cta:hover {
+  color: var(--blush);
+}
+
+/* ----------------------------------------------------- buttons -- */
+
+.button {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  padding: 0.95rem 1.9rem;
+  border: 1px solid var(--ink);
+  cursor: pointer;
+  color: var(--ink);
+  background-color: transparent;
+  transition: color var(--dur) var(--ease), background-color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+
+.button--primary {
+  background-color: var(--ink);
+  color: var(--ivory);
+}
+
+.button--primary:hover {
+  background-color: var(--copper);
+  border-color: var(--copper);
+}
+
+.button:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.button:disabled:hover {
+  background-color: var(--ink);
+  border-color: var(--ink);
+  color: var(--ivory);
+}
+
+.section--dark .button--primary:disabled:hover {
+  background-color: var(--ink-on-dark);
+  border-color: var(--ink-on-dark);
+  color: var(--charcoal);
+}
+
+.button--outline:hover {
+  color: var(--copper);
+  border-color: var(--copper);
+}
+
+.section--dark .button {
+  border-color: var(--ink-on-dark);
+  color: var(--ink-on-dark);
+}
+
+.section--dark .button--primary {
+  background-color: var(--ink-on-dark);
+  color: var(--charcoal);
+}
+
+.section--dark .button--primary:hover {
+  background-color: var(--blush);
+  border-color: var(--blush);
+  color: var(--charcoal);
+}
+
+.section--dark .button--outline:hover {
+  color: var(--blush);
+  border-color: var(--blush);
+}
+
+.linklike {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  transition: color var(--dur) var(--ease);
+}
+
+.linklike:hover {
+  color: var(--copper);
+}
+
+/* ------------------------------------------------------ footer -- */
+
+.site-footer {
+  position: relative;
+  z-index: 10;
+  background-color: var(--charcoal);
+  border-top: 1px solid var(--rule-on-dark);
+}
+
+.site-footer__inner {
+  position: relative;
+  z-index: 20;
+  isolation: isolate;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  max-width: var(--measure-wide);
+  margin-inline: auto;
+  padding: clamp(2.5rem, 6vh, 4rem) var(--pad-x);
+}
+
+.site-footer__brand img {
+  width: clamp(220px, 22vw, 300px);
+}
+
+.site-footer__meta {
+  text-align: right;
+  font-size: 0.9rem;
+  color: var(--stone-on-dark);
+}
+
+@media (max-width: 40rem) {
+  .site-footer__meta {
+    text-align: left;
+  }
+}
+
+.site-footer__meta a {
+  color: var(--blush);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.site-footer__small {
+  margin-top: 0.75rem;
+  font-size: 0.78rem;
+  color: var(--stone-on-dark);
+}
+
+.site-footer__small a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ---------------------------------------------- reduced motion -- */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

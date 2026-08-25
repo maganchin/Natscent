@@ -1,0 +1,45 @@
+/* ---------------------------------------------------------------
+   Spark Chances — design tokens
+   A restrained palette: ivory, charcoal, stone, blush, copper.
+   No gradients, no rounded corners, no extra hues.
+   --------------------------------------------------------------- */
+
+:root {
+  /* Palette pulled directly from the Spark Chances logo (public/logo.svg):
+     the plum of "Chances", the leaf green of "Spark", the soft mauve of
+     the vine's shadow tones. Ground stays a neutral ivory/plum-black so
+     the brand colors read as accents rather than tinting everything. */
+
+  /* Ground */
+  --ivory: #f5f3ee;
+  --charcoal: #211c2a;
+
+  /* Ink */
+  --ink: #2a2433;
+  --ink-on-dark: #f2ede4;
+  --stone: #6e6577;
+  --stone-on-dark: #b7acc0;
+
+  /* Accent — used sparingly */
+  --blush: #a084a5; /* logo's mauve */
+  --copper: #5e7d38; /* logo's leaf green, deepened; 4.5:1+ on ivory */
+
+  /* Lines */
+  --rule: rgba(42, 36, 51, 0.15);
+  --rule-on-dark: rgba(242, 237, 228, 0.18);
+
+  /* Type — two faces only:
+     Fraunces = “Make your space feel…” (display)
+     Inter    = “What we create” (nav / UI) */
+  --font-serif: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Inter", -apple-system, "Segoe UI", sans-serif;
+
+  /* Motion — functional only: color/opacity state changes */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur: 200ms;
+
+  /* Layout */
+  --measure-wide: 78rem;
+  --pad-x: clamp(1.4rem, 5vw, 4.5rem);
+  --section-gap: clamp(6rem, 13vh, 10rem);
+}

@@ -1,0 +1,537 @@
+/* ---------------------------------------------------------------
+   Sections: hero → creates (what + how) → why → environments → consultation
+   --------------------------------------------------------------- */
+
+main {
+  position: relative;
+}
+
+.section {
+  position: relative;
+  padding-block: var(--section-gap);
+  scroll-margin-top: 5rem;
+}
+
+.section__inner {
+  position: relative;
+  z-index: 20;
+  isolation: isolate;
+  max-width: var(--measure-wide);
+  margin-inline: auto;
+  padding-inline: var(--pad-x);
+}
+
+.section--dark {
+  background-color: var(--charcoal);
+}
+
+/* When the scroll effect is active, dark sections go transparent so
+   the animated body scrim (the scrolling smoke plume) shows through
+   instead of a flat color. */
+body.has-motion .section--dark {
+  background-color: transparent;
+}
+
+/* -------------------------------------------------------- hero -- */
+
+.hero {
+  position: relative;
+  min-height: 100svh;
+  padding-bottom: clamp(20rem, 42vh, 32rem);
+  display: grid;
+  background-color: #1a1610;
+}
+
+/* Photo + fade live in their own isolated layer (z-index 0) so the
+   dissolve composites against the image, not against the trail or
+   type. Trail stamps (z-index 3) still sit above the photo and below
+   .hero__inner. --fade-top is scrubbed on scroll (src/scroll.ts):
+   the mask stays solid down to that line, then eases to transparent,
+   so the bottom of the photo dissolves first and the next section
+   shows through. */
+.hero__ground {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  isolation: isolate;
+  pointer-events: none;
+  --fade-top: 100svh;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 var(--fade-top),
+    rgba(0, 0, 0, 0.55) calc(var(--fade-top) + 10vh),
+    rgba(0, 0, 0, 0.18) calc(var(--fade-top) + 24vh),
+    transparent calc(var(--fade-top) + 40vh)
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 var(--fade-top),
+    rgba(0, 0, 0, 0.55) calc(var(--fade-top) + 10vh),
+    rgba(0, 0, 0, 0.18) calc(var(--fade-top) + 24vh),
+    transparent calc(var(--fade-top) + 40vh)
+  );
+}
+
+/* Photo covers the first screen at every viewport. */
+.hero__bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+  min-height: 100dvh;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.hero__bg > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
+  object-position: center;
+}
+
+.hero__bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(0deg, rgba(15, 16, 10, 0.28), rgba(15, 16, 10, 0.1));
+}
+
+/* The mask on .hero__ground is the dissolve; this band only eases
+   the last of the dark into the page if JS is off. */
+.hero-transition {
+  position: relative;
+  z-index: 0;
+  height: clamp(8rem, 16vh, 12rem);
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 100%
+  );
+}
+
+/* margin-inline: 0 (not auto) — the heading must stay pinned to the
+   left edge of the viewport on every window size, including screens
+   wider than --measure-wide, rather than centering as a block once
+   its own max-width caps out. */
+.hero__inner {
+  position: relative;
+  z-index: 20;
+  isolation: isolate;
+  width: 100%;
+  max-width: var(--measure-wide);
+  min-height: 100svh;
+  margin-inline: 0;
+  padding: clamp(2rem, 6vh, 3.5rem) var(--pad-x);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: left;
+}
+
+.hero__heading {
+  font-family: var(--font-serif);
+  font-weight: 340;
+  font-variation-settings: "opsz" 144;
+  font-size: clamp(2.2rem, 4vw + 3vh, 6.4rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--ink-on-dark);
+  max-width: 15em;
+}
+
+/* The one reserved moment: this is the only heading on the page
+   that uses the regular-to-italic-accent treatment. */
+.hero__heading em {
+  font-style: italic;
+  color: var(--blush);
+}
+
+.hero__sub {
+  font-family: var(--font-serif);
+  font-weight: 340;
+  font-variation-settings: "opsz" 144;
+  font-size: clamp(1.35rem, 1.6vw + 1.1vh, 2rem);
+  line-height: 1.45;
+  color: var(--ink-on-dark);
+  max-width: 32em;
+  margin: clamp(1.5rem, 4vh, 2.5rem) 0 0;
+}
+
+.hero__actions {
+  margin-top: clamp(2rem, 5vh, 3rem);
+}
+
+.hero__actions .button--primary {
+  background-color: var(--copper);
+  color: var(--ink-on-dark);
+  border-color: var(--copper);
+}
+
+.hero__actions .button--primary:hover {
+  background-color: var(--blush);
+  border-color: var(--blush);
+  color: var(--charcoal);
+}
+
+/* ------------------------------------------- creates (what + how) -- */
+
+.creates__heading {
+  max-width: 18em;
+}
+
+.creates__statement {
+  font-family: var(--font-serif);
+  font-weight: 340;
+  font-variation-settings: "opsz" 144;
+  font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+  line-height: 1.5;
+  color: var(--stone);
+  max-width: 34em;
+  margin-top: clamp(1.75rem, 4.5vh, 2.75rem);
+}
+
+.creates__process {
+  margin-top: clamp(3.5rem, 8vh, 5.5rem);
+  padding-top: clamp(2.5rem, 6vh, 4rem);
+  border-top: 1px solid var(--rule-on-dark);
+}
+
+.process__line {
+  font-family: var(--font-serif);
+  font-weight: 340;
+  font-variation-settings: "opsz" 144;
+  font-size: clamp(1.8rem, 4.6vw, 3.4rem);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  max-width: 20em;
+}
+
+.process__note {
+  font-family: var(--font-serif);
+  font-weight: 340;
+  font-variation-settings: "opsz" 144;
+  font-size: clamp(1.1rem, 1.8vw, 1.3rem);
+  line-height: 1.5;
+  color: var(--stone);
+  max-width: 30em;
+  margin-top: clamp(1.25rem, 3vh, 1.75rem);
+}
+
+/* Same trick as .hero-transition: a flat, fully opaque version of
+   .creates's own dark charcoal, dissolving to transparent so the
+   real page background (light) reveals itself underneath rather than
+   guessing its tone. */
+/* --------------------------------------------------------- why -- */
+
+.why__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(2.5rem, 6vw, 5rem);
+  margin-top: clamp(3rem, 7vh, 4.5rem);
+  align-items: start;
+}
+
+@media (max-width: 56rem) {
+  .why__layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.why__moments {
+  border-top: 1px solid var(--rule);
+}
+
+.why__moment {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding-block: 1.15rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.why__title {
+  font-family: var(--font-serif);
+  font-weight: 340;
+  font-variation-settings: "opsz" 144;
+  font-size: clamp(1.3rem, 2.2vw, 1.7rem);
+  line-height: 1.15;
+}
+
+.why__moment-note {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--stone);
+  max-width: 32em;
+}
+
+.why__aside {
+  border-top: 1px solid var(--rule);
+  padding-top: clamp(1.15rem, 3vh, 1.5rem);
+}
+
+.why__claim {
+  font-family: var(--font-serif);
+  font-weight: 340;
+  font-variation-settings: "opsz" 144;
+  font-size: clamp(1.15rem, 1.8vw, 1.4rem);
+  line-height: 1.4;
+  color: var(--ink);
+  max-width: 22em;
+  margin-bottom: 1rem;
+}
+
+.why__stat-caption {
+  margin-top: 0.5rem;
+  font-size: 0.98rem;
+  color: var(--stone);
+  max-width: 22em;
+}
+
+.why__stat-caption cite {
+  font-style: italic;
+}
+
+.fn {
+  color: var(--copper);
+  text-decoration: none;
+}
+
+.why__sources {
+  margin-top: 1.5rem;
+}
+
+.why__sources summary {
+  font-size: 0.82rem;
+  color: var(--stone);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  width: fit-content;
+}
+
+.why__source-list {
+  margin: 1rem 0 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.85rem;
+  font-size: 0.85rem;
+  color: var(--stone);
+}
+
+.why__source-list a {
+  color: var(--copper);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ------------------------------------------------ environments -- */
+
+.environments__line {
+  font-family: var(--font-serif);
+  font-weight: 340;
+  font-variation-settings: "opsz" 144;
+  font-size: clamp(1.3rem, 2.6vw, 1.85rem);
+  line-height: 1.55;
+  color: var(--stone);
+  max-width: 42em;
+  margin-top: clamp(1.75rem, 4.5vh, 2.75rem);
+}
+
+/* ------------------------------------------------ consultation -- */
+
+/* A closer, not another chapter: less vertical padding than the
+   editorial sections, and the heading sits beside the form so the
+   block doesn't stack into a tall dark slab. */
+.consult {
+  padding-block: clamp(3.5rem, 8vh, 6rem);
+}
+
+.consult__layout {
+  display: grid;
+  grid-template-columns: minmax(12rem, 0.8fr) minmax(0, 1.3fr);
+  gap: clamp(2rem, 5vw, 4.5rem) clamp(2.5rem, 6vw, 5.5rem);
+  align-items: start;
+}
+
+@media (max-width: 48rem) {
+  .consult__layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.consult__intro {
+  max-width: 16em;
+}
+
+.consult__lede {
+  font-family: var(--font-serif);
+  font-weight: 340;
+  font-variation-settings: "opsz" 144;
+  font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+  line-height: 1.45;
+  color: var(--stone-on-dark);
+  margin-top: 0.75rem;
+}
+
+.consult__form {
+  position: relative;
+  container-type: inline-size;
+}
+
+.field-honey {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.15rem 1.75rem;
+}
+
+@container (max-width: 28rem) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.field__label {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--stone-on-dark);
+  margin-bottom: 0.45rem;
+}
+
+/* Underline fields, not boxes — reads as bespoke stationery rather
+   than a generic web form. Serif type on the typed value carries the
+   same premium register as the rest of the page. */
+.field__input {
+  width: 100%;
+  font-family: var(--font-serif);
+  font-weight: 340;
+  font-variation-settings: "opsz" 144;
+  font-size: 1.15rem;
+  color: var(--ink-on-dark);
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid var(--rule-on-dark);
+  padding: 0.25rem 0.1rem 0.55rem;
+  transition: border-color var(--dur) var(--ease);
+}
+
+.field__input::placeholder {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--stone-on-dark) 55%, transparent);
+}
+
+.field__input:focus {
+  outline: none;
+  border-bottom-color: var(--blush);
+}
+
+.field__input[aria-invalid="true"] {
+  border-bottom-color: var(--blush);
+}
+
+.field--full {
+  grid-column: 1 / -1;
+}
+
+.field__textarea {
+  resize: vertical;
+  min-height: 4.25rem;
+  line-height: 1.45;
+}
+
+.field__error {
+  font-size: 0.8rem;
+  color: var(--blush);
+}
+
+.field__error:empty {
+  display: none;
+}
+
+.field__error:not(:empty) {
+  margin-top: 0.35rem;
+}
+
+.consult__submit-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.5rem 2.5rem;
+  margin-top: 1.6rem;
+}
+
+.consult__submit-row .button {
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.85rem 1.8rem;
+}
+
+.consult__note {
+  font-size: 0.82rem;
+  color: color-mix(in srgb, var(--stone-on-dark) 85%, transparent);
+  max-width: 24em;
+}
+
+.consult__status {
+  margin-top: clamp(2rem, 5vh, 3rem);
+  border-top: 1px solid var(--rule-on-dark);
+  padding-top: clamp(1.5rem, 4vh, 2rem);
+  max-width: 30em;
+}
+
+.consult__status-title {
+  font-family: var(--font-serif);
+  font-weight: 340;
+  font-variation-settings: "opsz" 144;
+  font-size: 1.4rem;
+  color: var(--ink-on-dark);
+  margin-bottom: 0.6rem;
+}
+
+.consult__status-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  margin-top: 1.3rem;
+}
+
+.consult__status-alt {
+  margin-top: 1rem;
+  font-size: 0.88rem;
+  color: var(--stone-on-dark);
+}
+
+.consult__status-alt a {
+  color: var(--blush);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
