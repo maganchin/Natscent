@@ -325,6 +325,25 @@ p {
   color: var(--blush);
 }
 
+.site-nav__sound {
+  font-family: var(--font-sans);
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: color var(--dur) var(--ease);
+}
+
+.site-nav__sound:hover,
+.site-nav__sound[aria-pressed="true"] {
+  color: var(--blush);
+}
+
 /* ----------------------------------------------------- buttons -- */
 
 .button {
