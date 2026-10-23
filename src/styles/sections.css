@@ -355,6 +355,176 @@ body.has-motion .section--dark {
   margin-top: clamp(1.75rem, 4.5vh, 2.75rem);
 }
 
+/* ------------------------------------------------ testimonials -- */
+
+.testimonials__eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--copper);
+  margin-bottom: 1.4rem;
+}
+
+.testimonials__lede {
+  font-family: var(--font-serif);
+  font-weight: 340;
+  font-variation-settings: "opsz" 144;
+  font-size: clamp(1.15rem, 2vw, 1.5rem);
+  line-height: 1.5;
+  color: var(--stone);
+  max-width: 34em;
+  margin-top: clamp(1.4rem, 3.5vh, 2rem);
+}
+
+.testimonials__list {
+  list-style: none;
+  margin: clamp(3.5rem, 9vh, 6rem) 0 0;
+  padding: 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.testimonial {
+  display: grid;
+  grid-template-columns: minmax(10rem, 17rem) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 5.5rem);
+  align-items: start;
+  padding-block: clamp(2.75rem, 7vh, 4.5rem);
+  border-top: 1px solid var(--rule);
+}
+
+/* Portrait: square-cornered plate with a hairline offset frame, like
+   a mounted print. The frame is a pseudo-element so the photo stays
+   flush and crisp. */
+.testimonial__portrait {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 4 / 5;
+  isolation: isolate;
+}
+
+.testimonial__portrait::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translate(0.7rem, 0.7rem);
+  border: 1px solid var(--blush);
+  z-index: -1;
+}
+
+.testimonial__portrait img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: var(--rule);
+}
+
+.testimonial__body {
+  margin: 0;
+  max-width: 40em;
+}
+
+.testimonial__quote {
+  margin: 0;
+}
+
+.testimonial__quote::before {
+  content: "\201C";
+  display: block;
+  font-family: var(--font-serif);
+  font-weight: 340;
+  font-size: clamp(3.5rem, 6vw, 5rem);
+  line-height: 0.7;
+  height: 0.45em;
+  color: var(--blush);
+  margin-bottom: 0.6rem;
+}
+
+.testimonial__quote p {
+  font-family: var(--font-serif);
+  font-weight: 340;
+  font-variation-settings: "opsz" 144;
+  font-size: clamp(1.05rem, 1.45vw, 1.22rem);
+  line-height: 1.65;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+
+.testimonial--lead .testimonial__quote p {
+  font-size: clamp(1.1rem, 1.6vw, 1.3rem);
+}
+
+.testimonial--short .testimonial__quote p {
+  font-size: clamp(1.45rem, 2.7vw, 2.15rem);
+  line-height: 1.38;
+  font-style: italic;
+}
+
+.testimonial__cite {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-top: clamp(1.6rem, 3.5vh, 2.25rem);
+  font-style: normal;
+}
+
+.testimonial__cite::before {
+  content: "";
+  width: 2.75rem;
+  border-top: 1px solid var(--copper);
+  margin-bottom: 1.1rem;
+}
+
+.testimonial__name {
+  font-family: var(--font-serif);
+  font-weight: 540;
+  font-variation-settings: "opsz" 72;
+  font-size: 1.2rem;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.testimonial__role {
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: var(--stone);
+}
+
+.testimonial__org {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.6;
+  color: var(--copper);
+  margin-top: 0.15rem;
+}
+
+@media (max-width: 48rem) {
+  .testimonial {
+    grid-template-columns: 1fr;
+    gap: 2.25rem;
+  }
+  .testimonial__portrait {
+    width: min(68%, 16rem);
+  }
+}
+
+/* Quiet entrance: a short fade/rise as each entry reaches the
+   viewport. Only when motion is allowed (has-motion). */
+body.has-motion .testimonial {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 800ms var(--ease), transform 800ms var(--ease);
+}
+
+body.has-motion .testimonial.is-in {
+  opacity: 1;
+  transform: none;
+}
+
 /* ------------------------------------------------ consultation -- */
 
 /* A closer, not another chapter: less vertical padding than the
