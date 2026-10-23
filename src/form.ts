@@ -6,7 +6,7 @@
    so the visitor can still reach us.
    ------------------------------------------------------------------ */
 
-export const CONTACT_EMAIL = "hello@sparkchances.com";
+export const CONTACT_EMAIL = "soojipark.sparkchances@gmail.com";
 
 const SUBMIT_ENDPOINT = `https://formsubmit.co/ajax/${CONTACT_EMAIL}`;
 
@@ -159,7 +159,7 @@ export function initContactForm(): void {
           statusBody,
           statusActions,
           "Thank you — your message is on its way.",
-          `We've emailed Spark Chances at ${CONTACT_EMAIL}. We'll reply to the address you shared.`,
+          "We've sent your message to the Spark Chances team. We'll reply to the address you shared.",
           false,
         );
         submitButton.textContent = defaultSubmitLabel;
@@ -175,7 +175,7 @@ export function initContactForm(): void {
           statusBody,
           statusActions,
           "One more step on our side.",
-          `We've sent an activation email to ${CONTACT_EMAIL}. Once that inbox is confirmed, new messages will arrive there. In the meantime you can still send this note from your own email.`,
+          "We've sent an activation email to the Spark Chances inbox. Once that is confirmed, new messages will arrive there. In the meantime you can still send this note from your own email.",
           true,
         );
       } else {

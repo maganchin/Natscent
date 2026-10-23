@@ -17,7 +17,7 @@ import { SmokeScrub } from "./smoke";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const SCRIM_DARK = "rgba(33, 28, 42, 0.88)";
+const SCRIM_DARK = "rgba(78, 64, 92, 0.86)";
 const SCRIM_LIGHT = "rgba(245, 243, 238, 0.82)";
 
 // The header is fixed and transparent by default (see base.css) so it

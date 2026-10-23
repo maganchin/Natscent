@@ -12,7 +12,7 @@
 
   /* Ground */
   --ivory: #f5f3ee;
-  --charcoal: #211c2a;
+  --charcoal: #4e405c;
 
   /* Ink */
   --ink: #2a2433;
@@ -29,9 +29,9 @@
   --rule-on-dark: rgba(242, 237, 228, 0.18);
 
   /* Type — two faces only:
-     Fraunces = “Make your space feel…” (display)
+     Inter = display, body and UI (one face throughout)
      Inter    = “What we create” (nav / UI) */
-  --font-serif: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --font-serif: "Inter", -apple-system, "Segoe UI", sans-serif;
   --font-sans: "Inter", -apple-system, "Segoe UI", sans-serif;
 
   /* Motion — functional only: color/opacity state changes */

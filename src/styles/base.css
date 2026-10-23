@@ -48,7 +48,7 @@ body {
 }
 
 body.is-dark-zone {
-  --smoke-scrim: rgba(33, 28, 42, 0.88);
+  --smoke-scrim: rgba(78, 64, 92, 0.86);
 }
 
 /* Motion-enabled upgrade: SmokeScrub (src/smoke.ts) injects these two
@@ -501,3 +501,33 @@ p {
     animation-iteration-count: 1 !important;
   }
 }
+
+/* Light hero photo: while the header floats over it, use dark ink and a
+   pale veil; once it turns solid (site-header--solid) it reverts to the
+   charcoal bar with light type. */
+.site-header:not(.site-header--solid)::before {
+  background: linear-gradient(
+    to bottom,
+    rgba(245, 243, 238, 0.7) 0%,
+    rgba(245, 243, 238, 0.45) 40%,
+    rgba(245, 243, 238, 0.15) 80%,
+    transparent 100%
+  );
+}
+
+.site-header:not(.site-header--solid) .site-nav__link,
+.site-header:not(.site-header--solid) .site-nav__cta,
+.site-header:not(.site-header--solid) .site-nav__sound {
+  color: var(--ink);
+}
+
+.site-header:not(.site-header--solid) .site-nav__link:hover,
+.site-header:not(.site-header--solid) .site-nav__cta:hover,
+.site-header:not(.site-header--solid) .site-nav__sound:hover,
+.site-header:not(.site-header--solid) .site-nav__sound[aria-pressed="true"] {
+  color: var(--copper);
+}
+
+/* Plum header/footer: swap to the single-tone light mark so "Chances" stays legible. */
+.site-header--solid .site-nav__logo--dark { opacity: 0; }
+.site-header--solid .site-nav__logo--light { opacity: 1; }
